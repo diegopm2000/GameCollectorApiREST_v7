@@ -1,0 +1,37 @@
+{
+  "name": "gamecollectorapi",
+  "version": "0.0.6",
+  "private": true,
+  "description": "GameCollector Api REST v6",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-healthcheck": "^0.1.0",
+    "lodash": "^4.17.5",
+    "log-color": "^1.0.0",
+    "read-yaml-promise": "^1.0.2",
+    "request-promise": "^4.2.2",
+    "shortid": "^2.2.8",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "node ./node_modules/mocha/bin/mocha --recursive --timeout 20000 --reporter spec --exit",
+    "coverage": "istanbul cover node_modules/.bin/_mocha -- --recursive --timeout 20000 test/",
+    "lint": "node_modules/.bin/eslint api/** app.js"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.19.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "istanbul": "1.1.0-alpha.1",
+    "mocha": "^5.0.5",
+    "proxyquire": "^2.1.0",
+    "sinon": "^4.3.0",
+    "supertest": "^3.0.0"
+  }
+}

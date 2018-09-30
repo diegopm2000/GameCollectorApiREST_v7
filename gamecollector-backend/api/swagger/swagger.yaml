@@ -1,0 +1,377 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Game Collector App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /gamesystems:
+    x-swagger-router-controller: gamesystem.controller
+    get:
+      description: get the game system list
+      operationId: getGameSystems
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: false
+        - name: sort
+          in: query
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetGameSystemListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: add a new game system to the list
+      operationId: createGameSystem
+      parameters:
+        - in: body
+          name: gamesystem
+          description: The Game System to create.
+          schema:
+            $ref: "#/definitions/GameSystem"
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetGameSystemResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /gamesystems/{id}:
+    x-swagger-router-controller: gamesystem.controller
+    get:
+      description: get a game system
+      operationId: getGameSystemById
+      parameters:
+        - name: id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetGameSystemResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: update a game system
+      operationId: updateGameSystem
+      parameters:
+        - name: id
+          description: game system id
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: gamesystem
+          description: The Game System to update.
+          schema:
+            $ref: "#/definitions/GameSystem"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetGameSystemResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
+    delete:
+      description: delete a game system
+      operationId: deleteGameSystem
+      parameters:
+        - name: id
+          description: game system id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /videogames:
+    x-swagger-router-controller: videogame.controller
+    get:
+      description: get the game list
+      operationId: getVideoGames
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: false
+        - name: developer
+          in: query
+          type: string
+          required: false
+        - name: gamesystem
+          in: query
+          type: string
+          required: false
+        - name: genre
+          in: query
+          type: string
+          required: false
+        - name: year
+          in: query
+          type: number
+          required: false
+        - name: sort
+          in: query
+          type: string
+          required: false   
+        - name: fields
+          in: query
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetVideoGameListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: add a new game system to the list
+      operationId: createVideoGame
+      parameters:
+        - in: body
+          name: videogame
+          description: The videogame to create.
+          schema:
+            $ref: "#/definitions/VideoGame"
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetVideoGameResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /videogames/{id}:
+    x-swagger-router-controller: videogame.controller
+    get:
+      description: get a videogame
+      operationId: getVideoGameById
+      parameters:
+        - name: id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetVideoGameResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: update a video game
+      operationId: updateVideoGame
+      parameters:
+        - name: id
+          description: videogame id
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: videogame
+          description: The videogame to update.
+          schema:
+            $ref: "#/definitions/VideoGame"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetVideoGameResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
+    delete:
+      description: delete a videogame
+      operationId: deleteVideoGame
+      parameters:
+        - name: id
+          description: videogame id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  GameSystem:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the game system
+      description:
+        type: string
+        description: Description of the game system
+      image:
+        type: string
+        format: byte
+    required:
+      - name
+      - description
+  GetGameSystemResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: identifier
+      name:
+        type: string
+        description: Name of the game system
+      description:
+        type: string
+        description: Description of the game system
+      image:
+        type: string
+        format: byte
+    required:
+      - id
+      - name
+      - description
+  GetGameSystemListResponse:
+    required:
+      - gamesystems
+    properties:
+      gamesystems:
+        type: array
+        items:
+          $ref: "#/definitions/GetGameSystemResponse"
+  VideoGame:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the game
+      developer:
+        type: string
+        description: Developer/Publisher of the game
+      gamesystem:
+        type: string
+        description: Name of the game system
+      genre:
+        type: string
+        description: Name of the genre/style of the game
+      year:
+        type: number
+        description: Release year
+      image:
+        type: string
+        format: byte
+    required:
+      - name
+      - developer
+      - gamesystem
+      - genre
+      - year
+  GetVideoGameResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: identifier
+      name:
+        type: string
+        description: Name of the game
+      developer:
+        type: string
+        description: Developer of the game
+      gamesystem:
+        type: string
+        description: Name of the game system
+      genre:
+        type: string
+        description: Name of the genre of the game
+      year:
+        type: number
+        description: Release year
+      image:
+        type: string
+        format: byte
+    required:
+      - id
+      - name
+      - developer
+      - gamesystem
+      - genre
+      - year
+  GetVideoGameListResponse:
+    required:
+      - videogames
+    properties:
+      videogames:
+        type: array
+        items:
+          $ref: "#/definitions/GetVideoGameResponse"  
+
+  GeneralResponse:
+    type: object
+    properties:
+      message:
+        type: string
+    required:
+      - message
+  ErrorResponse:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/ErrorIntResponse'
+  ErrorIntResponse:
+    properties:
+      code:
+        type: number
+      message:
+        type: string
+      description:
+        type: string
+    required:
+      - message

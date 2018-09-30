@@ -1,0 +1,42 @@
+version: "2"
+
+services:
+  sonarqube:
+    image: sonarqube:7.0
+    container_name: gamecollector-sonarqube
+    ports:
+      - "9000:9000"
+    networks:
+      - sonarnet
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+    volumes:
+      - gamecollector_sonarqube_conf:/opt/sonarqube/conf
+      - gamecollector_sonarqube_data:/opt/sonarqube/data
+      - gamecollector_sonarqube_extensions:/opt/sonarqube/extensions
+      - gamecollector_sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+
+  db:
+    image: postgres
+    container_name: gamecollector-sonarqube-psql
+    networks:
+      - sonarnet
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - gamecollector_sonarqube_postgresql:/var/lib/postgresql
+      # This needs explicit mapping due to https://github.com/docker-library/postgres/blob/4e48e3228a30763913ece952c611e5e9b95c8759/Dockerfile.template#L52
+      - gamecollector_sonarqube_postgresql_data:/var/lib/postgresql/data
+
+networks:
+  sonarnet:
+    driver: bridge
+
+volumes:
+  gamecollector_sonarqube_conf:
+  gamecollector_sonarqube_data:
+  gamecollector_sonarqube_extensions:
+  gamecollector_sonarqube_bundled-plugins:
+  gamecollector_sonarqube_postgresql:
+  gamecollector_sonarqube_postgresql_data:

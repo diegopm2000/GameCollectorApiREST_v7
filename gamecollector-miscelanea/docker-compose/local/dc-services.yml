@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+
+  gamecollector-springcfgserver:
+    build: ../../baseimages/springcfgserver-image/
+    image: gamecollector-springcfgserver
+    container_name: gamecollector-springcfgserver
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=git@github.com:diegopm2000/GameCollector-config.git
+    networks:
+      - gamecollector-network
+
+networks:
+  gamecollector-network:
+    name: gamecollector-network
+    driver: bridge
