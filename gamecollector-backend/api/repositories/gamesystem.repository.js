@@ -3,10 +3,14 @@
 const _ = require('lodash');
 const shortid = require('shortid');
 
+const log = require('../helpers/log.helper');
+
 // //////////////////////////////////////////////////////////////////////////////
 // PROPERTIES
 // //////////////////////////////////////////////////////////////////////////////
 
+// Name of the module
+const MODULE_NAME = 'GameSystem Repository';
 // Defines an initial set of gamesystems
 let gamesystems = [];
 
@@ -15,6 +19,8 @@ let gamesystems = [];
 // //////////////////////////////////////////////////////////////////////////////
 
 function getGameSystems(params) {
+  log.debug(`${MODULE_NAME}:${getGameSystems.name} (IN) -> params: ${JSON.stringify(params)}`);
+
   let gamesystemsResult = gamesystems.slice();
 
   // Filter by name
@@ -31,18 +37,32 @@ function getGameSystems(params) {
     }
   }
 
+  // Returning result
+  log.debug(`${MODULE_NAME}:${getGameSystems.name} (OUT) -> result: ${JSON.stringify(gamesystemsResult)}`);
   return gamesystemsResult;
 }
 
 function getGameSystemById(id) {
-  return gamesystems.find(element => element.id === id);
+  log.debug(`${MODULE_NAME}:${getGameSystemById.name} (IN) -> id: ${id}`);
+
+  const result = gamesystems.find(element => element.id === id);
+
+  log.debug(`${MODULE_NAME}:${getGameSystemById.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function getGameSystemByName(name) {
-  return gamesystems.find(element => element.name === name);
+  log.debug(`${MODULE_NAME}:${getGameSystemByName.name} (IN) -> name: ${name}`);
+
+  const result = gamesystems.find(element => element.name === name);
+
+  log.debug(`${MODULE_NAME}:${getGameSystemByName.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function createGameSystem(gameSystemP) {
+  log.debug(`${MODULE_NAME}:${createGameSystem.name} (IN) -> gameSystem: ${gameSystemP}`);
+
   const newGameSystem = {
     id: shortid.generate(),
     name: gameSystemP.name,
@@ -52,10 +72,15 @@ function createGameSystem(gameSystemP) {
 
   gamesystems.push(newGameSystem);
 
-  return getGameSystemById(newGameSystem.id);
+  const result = getGameSystemById(newGameSystem.id);
+
+  log.debug(`${MODULE_NAME}:${createGameSystem.name} (OUT) -> result: ${result}`);
+  return result;
 }
 
 function updateGameSystem(gameSystemP) {
+  log.debug(`${MODULE_NAME}:${updateGameSystem.name} (IN) -> gameSystem: ${gameSystemP}`);
+
   const idToSearch = gameSystemP.id;
 
   const gameSystemToUpdate = getGameSystemById(idToSearch);
@@ -66,22 +91,33 @@ function updateGameSystem(gameSystemP) {
     gameSystemToUpdate.image = gameSystemP.image;
   }
 
-  return gameSystemToUpdate;
+  const result = gameSystemToUpdate;
+
+  log.debug(`${MODULE_NAME}:${updateGameSystem.name} (OUT) -> result: ${result}`);
+  return result;
 }
 
 function deleteGameSystem(id) {
+  log.debug(`${MODULE_NAME}:${deleteGameSystem.name} (IN) -> id: ${id}`);
+
+  let result = false;
+
   const idToSearch = id;
 
   const gameSystemToDelete = getGameSystemById(idToSearch);
 
   if (gameSystemToDelete !== undefined) {
     _.remove(gamesystems, element => element.id === gameSystemToDelete.id);
-    return true;
+    result = true;
   }
-  return false;
+
+  log.debug(`${MODULE_NAME}:${deleteGameSystem.name} (OUT) -> result: ${result}`);
+  return result;
 }
 
 function initDefaultGameSystems(gamesystemsSet) {
+  log.debug(`${MODULE_NAME}:${initDefaultGameSystems.name} (IN) -> gamesystemsSet: ${JSON.stringify(gamesystemsSet)}`);
+
   gamesystems = gamesystemsSet.slice();
 }
 

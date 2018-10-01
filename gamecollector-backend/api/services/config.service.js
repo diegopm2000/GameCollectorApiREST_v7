@@ -33,6 +33,7 @@ async function loadConfigFromYmlFile(file) {
   const pathFile = PATH_CONFIG_FILES + path.sep + file;
 
   const data = await readYaml(pathFile);
+
   log.debug(`${MODULE_NAME}:${loadConfigFromYmlFile.name} (OUT) -> data: ${JSON.stringify(data)}`);
   return data;
 }
@@ -44,6 +45,7 @@ async function loadConfigFromGIT(gituri, file) {
   const uri = `${gituri}/${file}`;
 
   const response = await rp.get(uri, { json: true });
+
   log.debug(`${MODULE_NAME}:${loadConfigFromGIT.name} (OUT) -> data: ${JSON.stringify(response)}`);
   return response;
 }
@@ -89,11 +91,11 @@ function setConfig(config) {
 }
 
 module.exports = {
-  GIT_SOURCE, // for testing
-  YAML_FILE_SOURCE, // for testing
-  ERROR_SOURCE_NOT_VALID, // for testing
-  loadConfigFromYmlFile, // for testing
-  loadConfigFromGIT, // for testing
+  GIT_SOURCE,
+  YAML_FILE_SOURCE,
+  ERROR_SOURCE_NOT_VALID,
+  loadConfigFromYmlFile,
+  loadConfigFromGIT,
   loadConfig,
   updateConfig,
   getConfig,

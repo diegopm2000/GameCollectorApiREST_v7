@@ -3,10 +3,14 @@
 const _ = require('lodash');
 const shortid = require('shortid');
 
+const log = require('../helpers/log.helper');
+
 // //////////////////////////////////////////////////////////////////////////////
 // PROPERTIES
 // //////////////////////////////////////////////////////////////////////////////
 
+// Name of the module
+const MODULE_NAME = 'GameSystem Repository';
 // Defines an initial set of gamesystems
 let videogames = [];
 
@@ -15,10 +19,12 @@ let videogames = [];
 // //////////////////////////////////////////////////////////////////////////////
 
 function stripVideoGames(fields, videogamesIN) {
-  const arrayFields = fields.split(',');
+  log.debug(`${MODULE_NAME}:${stripVideoGames.name} (IN) -> fields: ${JSON.stringify(fields)}, videogamesIN: ${JSON.stringify(videogamesIN)}`);
 
+  const arrayFields = fields.split(',');
   const strippedVideoGameResults = _.map(videogamesIN, videogame => _.pick(videogame, arrayFields));
 
+  log.debug(`${MODULE_NAME}:${stripVideoGames.name} (OUT) -> result: ${JSON.stringify(strippedVideoGameResults)}`);
   return strippedVideoGameResults;
 }
 
@@ -27,6 +33,8 @@ function stripVideoGames(fields, videogamesIN) {
 // //////////////////////////////////////////////////////////////////////////////
 
 function getVideoGames(params) {
+  log.debug(`${MODULE_NAME}:${getVideoGames.name} (IN) -> params: ${JSON.stringify(params)}`);
+
   let videogamesResult = videogames.slice();
 
   // Filter by name
@@ -71,18 +79,32 @@ function getVideoGames(params) {
     videogamesResult = stripVideoGames(params.fields, videogamesResult);
   }
 
+  // Returning the result
+  log.debug(`${MODULE_NAME}:${getVideoGames.name} (OUT) -> result: ${JSON.stringify(videogamesResult)}`);
   return videogamesResult;
 }
 
 function getVideoGameById(id) {
-  return videogames.find(element => element.id === id);
+  log.debug(`${MODULE_NAME}:${getVideoGameById.name} (IN) -> id: ${id}`);
+
+  const result = videogames.find(element => element.id === id);
+
+  log.debug(`${MODULE_NAME}:${getVideoGameById.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function getVideoGameByName(name) {
-  return videogames.find(element => element.name === name);
+  log.debug(`${MODULE_NAME}:${getVideoGameByName.name} (IN) -> name: ${name}`);
+
+  const result = videogames.find(element => element.name === name);
+
+  log.debug(`${MODULE_NAME}:${getVideoGameByName.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function createVideoGame(videogameP) {
+  log.debug(`${MODULE_NAME}:${createVideoGame.name} (IN) -> videogameP: ${JSON.stringify(videogameP)}`);
+
   const newVideoGame = {
     id: shortid.generate(),
     name: videogameP.name,
@@ -95,10 +117,15 @@ function createVideoGame(videogameP) {
 
   videogames.push(newVideoGame);
 
-  return getVideoGameById(newVideoGame.id);
+  const result = getVideoGameById(newVideoGame.id);
+
+  log.debug(`${MODULE_NAME}:${createVideoGame.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function updateVideoGame(params) {
+  log.debug(`${MODULE_NAME}:${updateVideoGame.name} (IN) -> params: ${JSON.stringify(params)}`);
+
   const idToSearch = params.id;
   const videogameToUpdate = getVideoGameById(idToSearch);
 
@@ -110,22 +137,32 @@ function updateVideoGame(params) {
     videogameToUpdate.year = params.year;
   }
 
-  return videogameToUpdate;
+  const result = videogameToUpdate;
+
+  log.debug(`${MODULE_NAME}:${updateVideoGame.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function deleteVideoGame(id) {
-  const idToSearch = id;
+  log.debug(`${MODULE_NAME}:${deleteVideoGame.name} (IN) -> id: ${id}`);
 
+  let result = false;
+
+  const idToSearch = id;
   const videogameToDelete = getVideoGameById(idToSearch);
 
   if (videogameToDelete !== undefined) {
     _.remove(videogames, element => element.id === videogameToDelete.id);
-    return true;
+    result = true;
   }
-  return false;
+
+  log.debug(`${MODULE_NAME}:${deleteVideoGame.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function initDefaultVideoGames(videogamesSet) {
+  log.debug(`${MODULE_NAME}:${initDefaultVideoGames.name} (IN) -> videogamesSet: ${JSON.stringify(videogamesSet)}`);
+
   videogames = videogamesSet.slice();
 }
 

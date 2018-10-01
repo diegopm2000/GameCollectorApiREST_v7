@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 
+const log = require('../helpers/log.helper');
 const videogameRepository = require('../repositories/videogame.repository');
 const gamesystemRepository = require('../repositories/gamesystem.repository');
 const messageHelper = require('../helpers/message.helper');
@@ -9,6 +10,9 @@ const messageHelper = require('../helpers/message.helper');
 // //////////////////////////////////////////////////////////////////////////////
 // CONSTANTS
 // //////////////////////////////////////////////////////////////////////////////
+
+// Name of the module
+const MODULE_NAME = '[GameSystem Service]';
 
 // Error Messages
 const GS_SVC_ERR_CREATE_GS_ALREADY_EXISTS_WITH_SAME_NAME = 'Not possible to create gamesystem. There is a gamesystem with the same name in the system';
@@ -22,29 +26,56 @@ const GS_SVC_ERR_DELETE_VG_EXISTS_ASSOCIATED = 'Not possible to delete gamesyste
 // //////////////////////////////////////////////////////////////////////////////
 
 function getGameSystems(params) {
-  return gamesystemRepository.getGameSystems(params);
+  log.debug(`${MODULE_NAME}:${getGameSystems.name} (IN) -> params: ${JSON.stringify(params)}`);
+
+  const result = gamesystemRepository.getGameSystems(params);
+
+  log.debug(`${MODULE_NAME}:${getGameSystems.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function getGameSystemById(id) {
-  return gamesystemRepository.getGameSystemById(id);
+  log.debug(`${MODULE_NAME}:${getGameSystemById.name} (IN) -> id: ${id}`);
+
+  const result = gamesystemRepository.getGameSystemById(id);
+
+  log.debug(`${MODULE_NAME}:${getGameSystemById.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function getGameSystemByName(name) {
-  return gamesystemRepository.getGameSystemByName(name);
+  log.debug(`${MODULE_NAME}:${getGameSystemByName.name} (IN) -> name: ${name}`);
+
+  const result = gamesystemRepository.getGameSystemByName(name);
+
+  log.debug(`${MODULE_NAME}:${getGameSystemByName.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function createGameSystem(params) {
+  log.debug(`${MODULE_NAME}:${createGameSystem.name} (IN) -> params: ${JSON.stringify(params)}`);
+
+  let result;
+
   // Checks if exists a gamesystem with the same name - Using module.exports
   // to call the function to ease the testing
   const gamesystemFound = module.exports.getGameSystemByName(params.name);
+
   if (_.isUndefined(gamesystemFound)) {
-    return gamesystemRepository.createGameSystem(params);
+    result = gamesystemRepository.createGameSystem(params);
+  } else {
+    result = messageHelper.buildErrorMessage(GS_SVC_ERR_CREATE_GS_ALREADY_EXISTS_WITH_SAME_NAME);
   }
-  return messageHelper.buildErrorMessage(GS_SVC_ERR_CREATE_GS_ALREADY_EXISTS_WITH_SAME_NAME);
+
+  log.debug(`${MODULE_NAME}:${createGameSystem.name} (OUT) -> result: ${JSON.stringify(result)}`);
+  return result;
 }
 
 function updateGameSystem(params) {
+  log.debug(`${MODULE_NAME}:${updateGameSystem.name} (IN) -> params: ${JSON.stringify(params)}`);
+
   let result;
+
   // Checks if exists a gamesystem with the same id - Using module.exports
   // to call the function to ease the testing
   const gamesystemFoundById = module.exports.getGameSystemById(params.id);
@@ -62,10 +93,13 @@ function updateGameSystem(params) {
     result = messageHelper.buildErrorMessage(GS_SVC_ERR_UPDATE_GS_NOT_FOUND_BY_ID);
   }
 
+  log.debug(`${MODULE_NAME}:${updateGameSystem.name} (OUT) -> result: ${JSON.stringify(result)}`);
   return result;
 }
 
 function deleteGameSystem(id) {
+  log.debug(`${MODULE_NAME}:${deleteGameSystem.name} (IN) -> id: ${id}`);
+
   let result;
 
   // First obtains the game system
@@ -89,6 +123,7 @@ function deleteGameSystem(id) {
     result = messageHelper.buildErrorMessage(GS_SVC_ERR_DELETE_GS_NOT_FOUND_BY_ID);
   }
 
+  log.debug(`${MODULE_NAME}:${deleteGameSystem.name} (OUT) -> result: ${JSON.stringify(result)}`);
   return result;
 }
 
